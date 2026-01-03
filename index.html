@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Quiz</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .quiz-container {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 12px;
+      padding: 20px 30px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .options {
+      list-style-type: none;
+    }
+
+    .options li {
+      margin-bottom: 10px;
+    }
+
+    .btn, .restart-btn {
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #42e695, #3bb2b8);
+      color: #fff;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #3bb2b8, #42e695);
+      transform: scale(1.05);
+    }
+
+    .restart-btn {
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      color: #fff;
+      margin-top: 20px;
+    }
+
+    .restart-btn:hover {
+      background: linear-gradient(135deg, #ff7eb3, #ff758c);
+      transform: scale(1.05);
+    }
+
+    .result {
+      font-size: 20px;
+      margin-top: 20px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    /* Keyframe Animation */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h1>Quiz Time!</h1>
+    <div class="question-container">
+      <p class="question">Question will go here.</p>
+      <ul class="options">
+        <!-- Options will be dynamically created here -->
+      </ul>
+    </div>
+    <button class="restart-btn" onclick="restartQuiz()" style="display: none;">Restart Quiz</button>
+  </div>
+
+  <script>
+    // Questions Array
+    const questions = [
+      {
+        question: "What is the capital of France?",
+        options: ["Paris", "London", "Berlin", "Madrid"],
+        correct: 0
+      },
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Jupiter", "Saturn"],
+        correct: 1
+      },
+      {
+        question: "Who wrote 'Romeo and Juliet'?",
+        options: ["William Shakespeare", "Mark Twain", "Charles Dickens", "Jane Austen"],
+        correct: 0
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const questionElement = document.querySelector(".question");
+    const optionsElement = document.querySelector(".options");
+    const restartButton = document.querySelector(".restart-btn");
+
+    // Load a question
+    function loadQuestion() {
+      const currentQuestion = questions[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+      optionsElement.innerHTML = "";
+
+      currentQuestion.options.forEach((option, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<button class="btn" onclick="checkAnswer(${index})">${option}</button>`;
+        optionsElement.appendChild(li);
+      });
+    }
+
+    // Check if the answer is correct
+    function checkAnswer(selected) {
+      const currentQuestion = questions[currentQuestionIndex];
+      if (selected === currentQuestion.correct) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    // Show quiz results
+    function showResults() {
+      questionElement.textContent = "Quiz Completed!";
+      optionsElement.innerHTML = `<p class="result">Your Score: ${score} / ${questions.length}</p>`;
+      restartButton.style.display = "block";
+    }
+
+    // Restart Quiz
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      restartButton.style.display = "none";
+      loadQuestion();
+    }
+
+    // Load the first question
+    loadQuestion();
+  </script>
+
+</body>
+</html>
